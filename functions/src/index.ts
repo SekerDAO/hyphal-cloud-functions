@@ -36,6 +36,8 @@ export const auth = https.onRequest((req, res) =>
 				return
 			}
 
+			await admin.firestore().collection("users").doc(account).set({lastSeen: new Date().toISOString()})
+
 			const firebaseToken = await admin.auth().createCustomToken(account)
 			res.status(200).json({token: firebaseToken})
 		} catch (e) {
