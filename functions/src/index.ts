@@ -26,11 +26,10 @@ export const auth = https.onRequest((req, res) =>
 				return
 			}
 
-			const account = web3.utils.toChecksumAddress(req.body.account)
-			const recoveredAccount = web3.eth.accounts.recover(
-				JSON.stringify({account: req.body.account, token: req.body.token}),
-				req.body.signature
-			)
+			const account = web3.utils.toChecksumAddress(req.body.account).toUpperCase()
+			const recoveredAccount = web3.eth.accounts
+				.recover(JSON.stringify({account: req.body.account, token: req.body.token}), req.body.signature)
+				.toUpperCase()
 			if (account !== recoveredAccount) {
 				res.sendStatus(401)
 				return
