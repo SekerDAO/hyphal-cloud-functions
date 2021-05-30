@@ -26,20 +26,21 @@ export const auth = https.onRequest((req, res) =>
 				return
 			}
 
-			const account = web3.utils.toChecksumAddress(req.body.account).toUpperCase()
-			const recoveredAccount = web3.eth.accounts
-				.recover(JSON.stringify({account: req.body.account, token: req.body.token}), req.body.signature)
-				.toUpperCase()
-			if (account !== recoveredAccount) {
+			const recoveredAccount = web3.eth.accounts.recover(
+				JSON.stringify({account: req.body.account, token: req.body.token}),
+				req.body.signature
+			)
+			if (req.body.account !== recoveredAccount) {
 				res.sendStatus(401)
 				return
 			}
 
-			await admin.firestore().collection("users").doc(account).set({lastSeen: new Date().toISOString()})
+			await admin.firestore().collection("users").doc(req.body.account).set({lastSeen: new Date().toISOString()})
 
-			const firebaseToken = await admin.auth().createCustomToken(account)
+			const firebaseToken = await admin.auth().createCustomToken(req.body.account)
 			res.status(200).json({token: firebaseToken})
 		} catch (e) {
+			console.error(e)
 			res.sendStatus(500)
 		}
 	})
