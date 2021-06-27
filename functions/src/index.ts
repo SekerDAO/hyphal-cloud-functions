@@ -35,7 +35,12 @@ export const auth = https.onRequest((req, res) =>
 				return
 			}
 
-			await admin.firestore().collection("users").doc(req.body.account).set({lastSeen: new Date().toISOString()})
+			const user = await admin.firestore().collection("users").doc(req.body.account).get()
+			if (user.exists) {
+				await admin.firestore().collection("users").doc(req.body.account).update({lastSeen: new Date().toISOString()})
+			} else {
+				await admin.firestore().collection("users").doc(req.body.account).set({lastSeen: new Date().toISOString()})
+			}
 
 			const firebaseToken = await admin.auth().createCustomToken(req.body.account)
 			res.status(200).json({token: firebaseToken})
