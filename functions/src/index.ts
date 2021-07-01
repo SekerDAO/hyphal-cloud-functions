@@ -138,7 +138,7 @@ export const editDao = https.onRequest((req, res) =>
 				return
 			}
 
-			const {address, name, description, website, twitter, telegram, discord} = req.body
+			const {address, name, description, website, twitter, telegram, discord, profileImage, headerImage} = req.body
 
 			const dao = await admin.firestore().collection("DAOs").doc(address).get()
 			if (!dao.exists) {
@@ -158,14 +158,20 @@ export const editDao = https.onRequest((req, res) =>
 				return
 			}
 
-			await admin.firestore().collection("DAOs").doc(address).update({
-				name,
-				description,
-				website,
-				twitter,
-				telegram,
-				discord
-			})
+			await admin
+				.firestore()
+				.collection("DAOs")
+				.doc(address)
+				.update({
+					...(name !== undefined ? {name} : {}),
+					...(description !== undefined ? {description} : {}),
+					...(website !== undefined ? {website} : {}),
+					...(twitter !== undefined ? {twitter} : {}),
+					...(telegram !== undefined ? {telegram} : {}),
+					...(discord !== undefined ? {discord} : {}),
+					...(profileImage !== undefined ? {profileImage} : {}),
+					...(headerImage !== undefined ? {headerImage} : {})
+				})
 
 			res.status(200).end("OK")
 		} catch (e) {
