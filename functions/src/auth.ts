@@ -1,9 +1,8 @@
 import {https} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
-import Web3 from "web3"
-
-const web3 = new Web3(Web3.givenProvider)
+import {verifyMessage} from "@ethersproject/wallet"
+import {isAddress} from "@ethersproject/address"
 
 const auth = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -18,12 +17,12 @@ const auth = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!web3.utils.isAddress(req.body.account)) {
+			if (!isAddress(req.body.account)) {
 				res.status(400).end("Bad Address")
 				return
 			}
 
-			const recoveredAccount = web3.eth.accounts.recover(
+			const recoveredAccount = verifyMessage(
 				JSON.stringify({account: req.body.account, token: req.body.token}),
 				req.body.signature
 			)

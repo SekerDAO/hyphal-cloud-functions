@@ -1,9 +1,15 @@
-import {https} from "firebase-functions"
+import {config, https} from "firebase-functions"
 import cors from "cors"
-import Web3 from "web3"
 import {Contract} from "@ethersproject/contracts"
 import HouseTokenDAO from "./abis/HouseTokenDAO.json"
 import admin from "firebase-admin"
+import {InfuraProvider} from "@ethersproject/providers"
+import {isAddress} from "@ethersproject/address"
+
+const provider = new InfuraProvider(config().infura.network, {
+	projectId: config().infura.id,
+	projectSecret: config().infura.secret
+})
 
 const updateDaoUser = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -17,6 +23,14 @@ const updateDaoUser = https.onRequest((req, res) =>
 				res.status(400).end("Bad Payload")
 				return
 			}
+			if (!isAddress(req.body.daoAddress)) {
+				res.status(400).end("Bad DAO Address")
+				return
+			}
+			if (!isAddress(req.body.memberAddress)) {
+				res.status(400).end("Bad Member Address")
+				return
+			}
 
 			const {daoAddress, memberAddress} = req.body
 
@@ -27,7 +41,7 @@ const updateDaoUser = https.onRequest((req, res) =>
 			}
 			const {type} = dao.data()!
 
-			const daoContract = new Contract(daoAddress, HouseTokenDAO.abi, Web3.givenProvider)
+			const daoContract = new Contract(daoAddress, HouseTokenDAO.abi, provider)
 			const member = await daoContract.members(memberAddress)
 			const role = member
 				? member.roles.headOfHouse

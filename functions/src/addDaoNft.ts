@@ -1,6 +1,7 @@
 import {https} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
+import {isAddress} from "@ethersproject/address"
 
 const addDaoNft = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -25,6 +26,10 @@ const addDaoNft = https.onRequest((req, res) =>
 
 			if (!(req.body?.address && req.body.nft)) {
 				res.status(400).end("Bad Payload")
+				return
+			}
+			if (!isAddress(req.body.address)) {
+				res.status(400).end("Bad DAO Address")
 				return
 			}
 
