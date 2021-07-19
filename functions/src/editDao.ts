@@ -24,18 +24,35 @@ const editDao = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!req.body?.address) {
+			if (!req.body?.gnosisAddress) {
 				res.status(400).end("Bad Payload")
 				return
 			}
-			if (!isAddress(req.body.address)) {
+			if (!isAddress(req.body.gnosisAddress)) {
 				res.status(400).end("Bad Address")
 				return
 			}
 
-			const {address, name, description, website, twitter, telegram, discord, profileImage, headerImage} = req.body
+			const {
+				daoAddress,
+				tokenAddress,
+				totalSupply,
+				decisionMakingSpeed,
+				tax,
+				minProposalAmount,
+				daoVotingThreshold,
+				name,
+				description,
+				website,
+				twitter,
+				telegram,
+				discord,
+				gnosisAddress,
+				profileImage,
+				headerImage
+			} = req.body
 
-			const dao = await admin.firestore().collection("DAOs").doc(address).get()
+			const dao = await admin.firestore().collection("DAOs").doc(gnosisAddress).get()
 			if (!dao.exists) {
 				res.status(400).end("DAO not found")
 				return
@@ -44,7 +61,7 @@ const editDao = https.onRequest((req, res) =>
 			const member = await admin
 				.firestore()
 				.collection("daoUsers")
-				.where("dao", "==", address)
+				.where("dao", "==", gnosisAddress)
 				.where("address", "==", user)
 				.where("role", "in", ["head", "admin"])
 				.get()
@@ -56,8 +73,15 @@ const editDao = https.onRequest((req, res) =>
 			await admin
 				.firestore()
 				.collection("DAOs")
-				.doc(address)
+				.doc(gnosisAddress)
 				.update({
+					...(daoAddress !== undefined ? {daoAddress} : {}),
+					...(tokenAddress !== undefined ? {tokenAddress} : {}),
+					...(totalSupply !== undefined ? {totalSupply} : {}),
+					...(decisionMakingSpeed !== undefined ? {decisionMakingSpeed} : {}),
+					...(tax !== undefined ? {tax} : {}),
+					...(minProposalAmount !== undefined ? {minProposalAmount} : {}),
+					...(daoVotingThreshold !== undefined ? {daoVotingThreshold} : {}),
 					...(name !== undefined ? {name} : {}),
 					...(description !== undefined ? {description} : {}),
 					...(website !== undefined ? {website} : {}),
