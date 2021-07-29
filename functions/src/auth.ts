@@ -26,7 +26,7 @@ const auth = https.onRequest((req, res) =>
 				JSON.stringify({account: req.body.account, token: req.body.token}),
 				req.body.signature
 			)
-			if (req.body.account !== recoveredAccount) {
+			if (req.body.account !== recoveredAccount.toLowerCase()) {
 				res.sendStatus(401)
 				return
 			}
