@@ -26,7 +26,8 @@ const addZoraAuction = https.onRequest((req, res) =>
 
 			if (
 				!(
-					req.body?.gnosisAddress &&
+					req.body?.id &&
+					req.body.gnosisAddress &&
 					req.body.nftAddress &&
 					req.body.nftId &&
 					req.body.duration &&
@@ -53,6 +54,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 			}
 
 			const {
+				id,
 				gnosisAddress,
 				nftAddress,
 				nftId,
@@ -82,6 +84,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 			}
 
 			await admin.firestore().collection("zoraAuctions").add({
+				id,
 				gnosisAddress,
 				nftAddress,
 				nftId,
