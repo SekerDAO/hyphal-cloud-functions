@@ -94,6 +94,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 				curatorFeePercentage,
 				tokenSymbol,
 				tokenAddress,
+				approved: false,
 				creationDate: new Date().toISOString()
 			})
 
