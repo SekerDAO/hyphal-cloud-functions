@@ -30,8 +30,9 @@ const addZoraAuction = https.onRequest((req, res) =>
 					req.body.gnosisAddress &&
 					req.body.nftAddress &&
 					req.body.nftId &&
+					req.body.nftName &&
 					req.body.duration &&
-					req.body.reservePrice &&
+					req.body.reservePrice != null &&
 					req.body.curatorAddress &&
 					req.body.curatorFeePercentage &&
 					req.body.tokenSymbol &&
@@ -58,6 +59,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 				gnosisAddress,
 				nftAddress,
 				nftId,
+				nftName,
 				duration,
 				reservePrice,
 				curatorAddress,
@@ -88,6 +90,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 				gnosisAddress,
 				nftAddress,
 				nftId,
+				nftName,
 				duration,
 				reservePrice,
 				curatorAddress,
