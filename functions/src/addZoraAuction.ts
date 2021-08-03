@@ -98,6 +98,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 				tokenSymbol,
 				tokenAddress,
 				approved: false,
+				canceled: false,
 				creationDate: new Date().toISOString()
 			})
 
