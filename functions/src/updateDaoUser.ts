@@ -1,4 +1,4 @@
-import {config, https} from "firebase-functions"
+import {config, https, logger} from "firebase-functions"
 import cors from "cors"
 import {Contract} from "@ethersproject/contracts"
 import HouseTokenDAO from "./abis/HouseTokenDAO.json"
@@ -6,7 +6,6 @@ import GnosisSafe from "./abis/GnosisSafeL2.json"
 import admin from "firebase-admin"
 import {InfuraProvider} from "@ethersproject/providers"
 import {isAddress} from "@ethersproject/address"
-import {DAOMemberRole} from "../../../TokenWalk/src/types/DAO"
 
 const provider = new InfuraProvider(config().infura.network, {
 	projectId: config().infura.id,
@@ -43,7 +42,7 @@ const updateDaoUser = https.onRequest((req, res) =>
 			}
 			const {type, daoAddress} = dao.data()!
 
-			let role: DAOMemberRole | null = null
+			let role: string | null = null
 			const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)
 			const isAdmin: boolean = await safeContract.isOwner(memberAddress)
 			if (isAdmin) {
@@ -78,7 +77,7 @@ const updateDaoUser = https.onRequest((req, res) =>
 				} else {
 					await admin.firestore().collection("daoUsers").add({
 						address: memberAddress,
-						dao: daoAddress,
+						dao: gnosisAddress,
 						memberSince: new Date().toISOString(),
 						role
 					})
@@ -89,7 +88,7 @@ const updateDaoUser = https.onRequest((req, res) =>
 
 			res.sendStatus(200)
 		} catch (e) {
-			console.error(e)
+			logger.error(e)
 			res.sendStatus(500)
 		}
 	})

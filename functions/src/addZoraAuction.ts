@@ -1,4 +1,4 @@
-import {https} from "firebase-functions"
+import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 import {isAddress} from "@ethersproject/address"
@@ -102,7 +102,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 
 			res.status(200).end("OK")
 		} catch (e) {
-			console.error(e)
+			logger.error(e)
 			res.sendStatus(500)
 		}
 	})

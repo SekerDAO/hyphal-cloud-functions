@@ -1,4 +1,4 @@
-import {https} from "firebase-functions"
+import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 import {verifyMessage} from "@ethersproject/wallet"
@@ -41,7 +41,7 @@ const auth = https.onRequest((req, res) =>
 			const firebaseToken = await admin.auth().createCustomToken(req.body.account)
 			res.status(200).json({token: firebaseToken})
 		} catch (e) {
-			console.error(e)
+			logger.error(e)
 			res.sendStatus(500)
 		}
 	})
