@@ -86,6 +86,8 @@ const updateDaoUser = https.onRequest((req, res) =>
 				await admin.firestore().collection("daoUsers").doc(userRoleSnapshot.docs[0].id).delete()
 			}
 
+			// TODO: update voting threshold!
+
 			res.sendStatus(200)
 		} catch (e) {
 			logger.error(e)

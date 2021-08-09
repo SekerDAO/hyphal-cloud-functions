@@ -61,7 +61,7 @@ const editDao = https.onRequest((req, res) =>
 			const member = await admin
 				.firestore()
 				.collection("daoUsers")
-				.where("dao", "==", gnosisAddress)
+				.where("dao", "==", gnosisAddress.toLowerCase())
 				.where("address", "==", user)
 				.where("role", "in", ["head", "admin"])
 				.get()
@@ -73,10 +73,10 @@ const editDao = https.onRequest((req, res) =>
 			await admin
 				.firestore()
 				.collection("DAOs")
-				.doc(gnosisAddress)
+				.doc(gnosisAddress.toLowerCase())
 				.update({
-					...(daoAddress !== undefined ? {daoAddress} : {}),
-					...(tokenAddress !== undefined ? {tokenAddress} : {}),
+					...(daoAddress !== undefined ? {daoAddress: daoAddress.toLowerCase()} : {}),
+					...(tokenAddress !== undefined ? {tokenAddress: tokenAddress.toLowerCase()} : {}),
 					...(totalSupply !== undefined ? {totalSupply} : {}),
 					...(decisionMakingSpeed !== undefined ? {decisionMakingSpeed} : {}),
 					...(tax !== undefined ? {tax} : {}),

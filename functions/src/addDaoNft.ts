@@ -35,7 +35,7 @@ const addDaoNft = https.onRequest((req, res) =>
 
 			const {address, nft} = req.body
 
-			const dao = await admin.firestore().collection("DAOs").doc(address).get()
+			const dao = await admin.firestore().collection("DAOs").doc(address.toLowerCase()).get()
 			if (!dao.exists) {
 				res.status(400).end("DAO not found")
 				return
@@ -44,7 +44,7 @@ const addDaoNft = https.onRequest((req, res) =>
 			const member = await admin
 				.firestore()
 				.collection("daoUsers")
-				.where("dao", "==", address)
+				.where("dao", "==", address.toLowerCase())
 				.where("address", "==", user)
 				.get()
 			if (member.empty) {
@@ -57,7 +57,7 @@ const addDaoNft = https.onRequest((req, res) =>
 				.collection("nfts")
 				.add({
 					...nft,
-					nftAdminUserUID: address
+					nftAdminUserUID: address.toLowerCase()
 				})
 
 			res.status(200).end("OK")

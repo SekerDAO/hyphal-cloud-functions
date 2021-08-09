@@ -68,7 +68,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 				tokenAddress
 			} = req.body
 
-			const dao = await admin.firestore().collection("DAOs").doc(gnosisAddress).get()
+			const dao = await admin.firestore().collection("DAOs").doc(gnosisAddress.toLowerCase()).get()
 			if (!dao.exists) {
 				res.status(400).end("DAO not found")
 				return
@@ -77,7 +77,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 			const member = await admin
 				.firestore()
 				.collection("daoUsers")
-				.where("dao", "==", gnosisAddress)
+				.where("dao", "==", gnosisAddress.toLowerCase())
 				.where("address", "==", user)
 				.get()
 			if (member.empty) {
@@ -87,16 +87,16 @@ const addZoraAuction = https.onRequest((req, res) =>
 
 			await admin.firestore().collection("zoraAuctions").add({
 				id,
-				gnosisAddress,
-				nftAddress,
+				gnosisAddress: gnosisAddress.toLowerCase(),
+				nftAddress: nftAddress.toLowerCase(),
 				nftId,
 				nftName,
 				duration,
 				reservePrice,
-				curatorAddress,
+				curatorAddress: curatorAddress.toLowerCase(),
 				curatorFeePercentage,
 				tokenSymbol,
-				tokenAddress,
+				tokenAddress: tokenAddress.toLowerCase(),
 				creationDate: new Date().toISOString()
 			})
 
