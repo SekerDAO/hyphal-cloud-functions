@@ -35,7 +35,7 @@ const updateDaoUser = https.onRequest((req, res) =>
 
 			const {gnosisAddress, memberAddress} = req.body
 
-			const dao = await admin.firestore().collection("DAOs").doc(gnosisAddress).get()
+			const dao = await admin.firestore().collection("DAOs").doc(gnosisAddress.toLowerCase()).get()
 			if (!dao.exists) {
 				res.status(400).end("DAO not found")
 				return
@@ -59,8 +59,8 @@ const updateDaoUser = https.onRequest((req, res) =>
 			const userRoleSnapshot = await admin
 				.firestore()
 				.collection("daoUsers")
-				.where("address", "==", memberAddress)
-				.where("dao", "==", gnosisAddress)
+				.where("address", "==", memberAddress.toLowerCase())
+				.where("dao", "==", gnosisAddress.toLowerCase())
 				.get()
 			const oldRole = userRoleSnapshot.empty ? null : userRoleSnapshot.docs[0].data().role
 
@@ -76,8 +76,8 @@ const updateDaoUser = https.onRequest((req, res) =>
 					})
 				} else {
 					await admin.firestore().collection("daoUsers").add({
-						address: memberAddress,
-						dao: gnosisAddress,
+						address: memberAddress.toLowerCase(),
+						dao: gnosisAddress.toLowerCase(),
 						memberSince: new Date().toISOString(),
 						role
 					})
@@ -85,8 +85,6 @@ const updateDaoUser = https.onRequest((req, res) =>
 			} else {
 				await admin.firestore().collection("daoUsers").doc(userRoleSnapshot.docs[0].id).delete()
 			}
-
-			// TODO: update voting threshold!
 
 			res.sendStatus(200)
 		} catch (e) {
