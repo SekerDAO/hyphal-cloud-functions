@@ -40,7 +40,7 @@ const addProposalSignatures = https.onRequest((req, res) =>
 			const member = await admin
 				.firestore()
 				.collection("daoUsers")
-				.where("dao", "==", gnosisAddress)
+				.where("dao", "==", gnosisAddress.toLowerCase())
 				.where("address", "==", user)
 				.where("role", "in", ["admin", "head"])
 				.get()
