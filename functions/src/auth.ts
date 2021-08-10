@@ -23,7 +23,7 @@ const auth = https.onRequest((req, res) =>
 			}
 
 			const recoveredAccount = verifyMessage(
-				JSON.stringify({account: req.body.accoun.toLowerCase(), token: req.body.token}),
+				JSON.stringify({account: req.body.account.toLowerCase(), token: req.body.token}),
 				req.body.signature
 			)
 			if (req.body.account.toLowerCase() !== recoveredAccount.toLowerCase()) {
