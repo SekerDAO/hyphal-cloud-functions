@@ -36,10 +36,8 @@ const editDao = https.onRequest((req, res) =>
 			const {
 				daoAddress,
 				tokenAddress,
+				votingAddress,
 				totalSupply,
-				decisionMakingSpeed,
-				tax,
-				minProposalAmount,
 				daoVotingThreshold,
 				name,
 				description,
@@ -77,10 +75,8 @@ const editDao = https.onRequest((req, res) =>
 				.update({
 					...(daoAddress !== undefined ? {daoAddress: daoAddress.toLowerCase()} : {}),
 					...(tokenAddress !== undefined ? {tokenAddress: tokenAddress.toLowerCase()} : {}),
+					...(votingAddress !== undefined ? {votingAddress: votingAddress.toLowerCase()} : {}),
 					...(totalSupply !== undefined ? {totalSupply} : {}),
-					...(decisionMakingSpeed !== undefined ? {decisionMakingSpeed} : {}),
-					...(tax !== undefined ? {tax} : {}),
-					...(minProposalAmount !== undefined ? {minProposalAmount} : {}),
 					...(daoVotingThreshold !== undefined ? {daoVotingThreshold} : {}),
 					...(name !== undefined ? {name} : {}),
 					...(description !== undefined ? {description} : {}),
