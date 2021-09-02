@@ -2,7 +2,7 @@ import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 
-const addProposalSignatures = https.onRequest((req, res) =>
+const addSafeProposalSignatures = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
 		try {
 			if (req.method !== "POST") {
@@ -67,4 +67,4 @@ const addProposalSignatures = https.onRequest((req, res) =>
 	})
 )
 
-export default addProposalSignatures
+export default addSafeProposalSignatures

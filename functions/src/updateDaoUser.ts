@@ -1,7 +1,6 @@
 import {config, https, logger} from "firebase-functions"
 import cors from "cors"
 import {Contract} from "@ethersproject/contracts"
-import HouseTokenDAO from "./abis/HouseTokenDAO.json"
 import GnosisSafe from "./abis/GnosisSafeL2.json"
 import admin from "firebase-admin"
 import {InfuraProvider} from "@ethersproject/providers"
@@ -25,7 +24,7 @@ const updateDaoUser = https.onRequest((req, res) =>
 				return
 			}
 			if (!isAddress(req.body.gnosisAddress)) {
-				res.status(400).end("Bad DAO Address")
+				res.status(400).end("Bad Gnosis Address")
 				return
 			}
 			if (!isAddress(req.body.memberAddress)) {
@@ -40,20 +39,22 @@ const updateDaoUser = https.onRequest((req, res) =>
 				res.status(400).end("DAO not found")
 				return
 			}
-			const {type, daoAddress} = dao.data()!
+			const {daoAddress} = dao.data()!
 
 			let role: string | null = null
 			const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)
 			const isAdmin: boolean = await safeContract.isOwner(memberAddress)
 			if (isAdmin) {
-				role = type === "house" ? "head" : "admin"
+				role = "admin"
 			} else if (daoAddress) {
-				const daoContract = new Contract(daoAddress, HouseTokenDAO.abi, provider)
-				const member = await daoContract.members(memberAddress)
-				if (member?.roles.headOfHouse || member.roles.member) {
-					// TODO: are we planning to add admins of DAO module?
-					role = "member"
-				}
+				// TODO: rewrite this stuff for the new DAO module
+				res.status(400).end("Not implemented yet")
+				return
+				// const daoContract = new Contract(daoAddress, HouseTokenDAO.abi, provider)
+				// const member = await daoContract.members(memberAddress)
+				// if (member?.roles.headOfHouse || member.roles.member) {
+				// 	role = "member"
+				// }
 			}
 
 			const userRoleSnapshot = await admin
