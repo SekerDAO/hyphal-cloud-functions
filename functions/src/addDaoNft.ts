@@ -57,7 +57,8 @@ const addDaoNft = https.onRequest((req, res) =>
 				.collection("nfts")
 				.add({
 					...nft,
-					owner: address.toLowerCase()
+					owner: address.toLowerCase(),
+					ownerType: "dao"
 				})
 
 			res.status(200).end("OK")
