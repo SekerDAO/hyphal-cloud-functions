@@ -3,7 +3,7 @@ import cors from "cors"
 import admin from "firebase-admin"
 import {isAddress} from "@ethersproject/address"
 
-const addZoraAuction = https.onRequest((req, res) =>
+const addAuction = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
 		try {
 			if (req.method !== "POST") {
@@ -85,7 +85,7 @@ const addZoraAuction = https.onRequest((req, res) =>
 				return
 			}
 
-			await admin.firestore().collection("zoraAuctions").add({
+			await admin.firestore().collection("auctions").add({
 				id,
 				gnosisAddress: gnosisAddress.toLowerCase(),
 				nftAddress: nftAddress.toLowerCase(),
@@ -108,4 +108,4 @@ const addZoraAuction = https.onRequest((req, res) =>
 	})
 )
 
-export default addZoraAuction
+export default addAuction
