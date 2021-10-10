@@ -33,17 +33,15 @@ const auth = https.onRequest((req, res) =>
 
 			const user = await admin.firestore().collection("users").doc(req.body.account.toLowerCase()).get()
 			if (user.exists) {
-				await admin
-					.firestore()
-					.collection("users")
-					.doc(req.body.account.toLowerCase())
-					.update({lastSeen: new Date().toISOString()})
+				await admin.firestore().collection("users").doc(req.body.account.toLowerCase()).update({
+					lastSeen: new Date().toISOString()
+				})
 			} else {
 				await admin
 					.firestore()
 					.collection("users")
 					.doc(req.body.account.toLowerCase())
-					.set({lastSeen: new Date().toISOString()})
+					.set({lastSeen: new Date().toISOString(), myDaos: [], myDomains: []})
 			}
 
 			const firebaseToken = await admin.auth().createCustomToken(req.body.account.toLowerCase())

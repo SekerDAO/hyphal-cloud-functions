@@ -1,14 +1,13 @@
 import admin from "firebase-admin"
-import auth from "./auth"
-import editDao from "./editDao"
-import addDaoNft from "./addDaoNft"
-import updateDaoUser from "./updateDaoUser"
-import addAuction from "./addAuction"
-import addSafeProposalSignatures from "./addSafeProposalSignatures"
-import deleteDaoNft from "./deleteDaoNft"
+import auth from "./endpoints/auth"
+import editDao from "./endpoints/editDao"
+import addDaoNft from "./endpoints/addDaoNft"
+import addSafeProposalSignatures from "./endpoints/addSafeProposalSignatures"
+import deleteDaoNft from "./endpoints/deleteDaoNft"
+import addDao from "./endpoints/addDao"
 
 admin.initializeApp({
 	serviceAccountId: "token-walk@appspot.gserviceaccount.com"
 })
 
-export {auth, editDao, addDaoNft, updateDaoUser, addAuction, addSafeProposalSignatures, deleteDaoNft}
+export {auth, editDao, addDao, addDaoNft, addSafeProposalSignatures, deleteDaoNft}
