@@ -1,13 +1,11 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
-import {isAddress} from "@ethersproject/address"
 import {Contract} from "@ethersproject/contracts"
-import GnosisSafe from "../abis/GnosisSafeL2.json"
-import provider from "../provider"
 import MultiArtToken from "../abis/MultiArtToken.json"
+import provider from "../provider"
 
-const deleteDaoNft = https.onRequest((req, res) =>
+const deleteNft = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
 		try {
 			if (req.method !== "POST") {
@@ -28,43 +26,26 @@ const deleteDaoNft = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!(req.body?.address && req.body.nftId)) {
+			if (!req.body?.id) {
 				res.status(400).end("Bad Payload")
 				return
 			}
-			if (!isAddress(req.body.address)) {
-				res.status(400).end("Bad DAO Address")
-				return
-			}
 
-			const {address, nftId} = req.body
+			const {id} = req.body
 
-			const dao = await admin.firestore().collection("DAOs").doc(address.toLowerCase()).get()
-			if (!dao.exists) {
-				res.status(400).end("DAO not found")
-				return
-			}
-
-			const safeContract = new Contract(address, GnosisSafe.abi, provider)
-			const addresses: string[] = await safeContract.getOwners()
-			if (!addresses.find(addr => addr.toLowerCase() === user.toLowerCase())) {
-				res.status(403).send("Forbidden")
-				return
-			}
-
-			const nft = await admin.firestore().collection("nfts").doc(nftId).get()
+			const nft = await admin.firestore().collection("nfts").doc(id).get()
 			if (!nft.exists) {
 				res.status(400).send("NFT does not exist")
 				return
 			}
 			const nftContract = new Contract(nft.data()?.address, MultiArtToken.abi, provider)
 			const owner = await nftContract.ownerOf(nft.data()?.id)
-			if (owner.toLowerCase() !== address.toLowerCase()) {
-				res.status(403).send("NFT does not belong to this DAO")
+			if (owner.toLowerCase() !== user.toLowerCase()) {
+				res.status(403).send("NFT does not belong to you")
 				return
 			}
 
-			await admin.firestore().collection("nfts").doc(nftId).delete()
+			await admin.firestore().collection("nfts").doc(id).delete()
 
 			res.status(200).end("OK")
 		} catch (e) {
@@ -74,4 +55,4 @@ const deleteDaoNft = https.onRequest((req, res) =>
 	})
 )
 
-export default deleteDaoNft
+export default deleteNft

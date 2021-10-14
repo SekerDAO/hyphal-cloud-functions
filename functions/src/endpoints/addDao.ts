@@ -1,16 +1,11 @@
-import {InfuraProvider} from "@ethersproject/providers"
-import {config, https, logger} from "firebase-functions"
+import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 import {isAddress} from "@ethersproject/address"
 import {Contract} from "@ethersproject/contracts"
 import GnosisSafe from "../abis/GnosisSafeL2.json"
 import {isBigNumberish} from "@ethersproject/bignumber/lib/bignumber"
-
-const provider = new InfuraProvider(config().infura.network, {
-	projectId: config().infura.id,
-	projectSecret: config().infura.secret
-})
+import provider from "../provider"
 
 const addDao = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
