@@ -8,9 +8,25 @@ import addDao from "./endpoints/addDao"
 import addSafeProposal from "./endpoints/addSafeProposal"
 import addNft from "./endpoints/addNft"
 import deleteNft from "./endpoints/deleteNft"
+import addMyDao from "./endpoints/addMyDao"
+import addMyDomain from "./endpoints/addMyDomain"
+import editUser from "./endpoints/editUser"
 
 admin.initializeApp({
 	serviceAccountId: "token-walk@appspot.gserviceaccount.com"
 })
 
-export {auth, editDao, addDao, addDaoNft, addSafeProposalSignatures, deleteDaoNft, addSafeProposal, addNft, deleteNft}
+export {
+	auth,
+	editDao,
+	addDao,
+	addDaoNft,
+	addSafeProposalSignatures,
+	deleteDaoNft,
+	addSafeProposal,
+	addNft,
+	deleteNft,
+	addMyDomain,
+	addMyDao,
+	editUser
+}

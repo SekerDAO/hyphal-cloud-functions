@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /nfts/{nft} {
+      allow read;
+    }
+    match /DAOs/{DAO} {
+      allow read;
+    }
+    match /safeProposals/{proposal} {
+      allow read;
+    }
+    match /users/{user} {
+      allow read;
+    }
+  }
+}
