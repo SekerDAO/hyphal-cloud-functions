@@ -1,17 +1,18 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
-import {isAddress} from "@ethersproject/address"
 import {Contract} from "@ethersproject/contracts"
+import {DefinedError} from "ajv"
 import GnosisSafe from "../abis/GnosisSafeL2.json"
 import provider from "../provider"
 import MultiArtToken from "../abis/MultiArtToken.json"
+import {validateDaoNft} from "../schemas/DaoNft"
 
 const addDaoNft = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
 		try {
 			if (req.method !== "POST") {
-				res.status(400).end("Only POST method is supported")
+				res.status(405).end("Only POST method is supported")
 				return
 			}
 
@@ -28,14 +29,14 @@ const addDaoNft = https.onRequest((req, res) =>
 				return
 			}
 
-			// TODO: schema validation
-			if (!(req.body?.address && req.body.nft && req.body.nft.id && req.body.nft.address)) {
+			if (!validateDaoNft(req.body)) {
+				for (const err of validateDaoNft.errors as DefinedError[]) {
+					switch (err.propertyName) {
+						case "address":
+							res.status(400).end("Bad DAO or NFT Address")
+					}
+				}
 				res.status(400).end("Bad Payload")
-				return
-			}
-			if (!isAddress(req.body.address)) {
-				res.status(400).end("Bad DAO Address")
-				return
 			}
 
 			const {address, nft} = req.body
