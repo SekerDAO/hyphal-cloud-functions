@@ -38,8 +38,18 @@ const editDao = https.onRequest((req, res) =>
 
 			// TODO: add schema validation
 
-			const {gnosisAddress, name, description, website, twitter, telegram, discord, profileImage, headerImage} =
-				req.body
+			const {
+				gnosisAddress,
+				name,
+				description,
+				website,
+				twitter,
+				telegram,
+				discord,
+				profileImage,
+				headerImage,
+				seeleAddress
+			} = req.body
 
 			const dao = await admin.firestore().collection("DAOs").doc(gnosisAddress.toLowerCase()).get()
 			if (!dao.exists) {
@@ -66,7 +76,8 @@ const editDao = https.onRequest((req, res) =>
 					...(telegram === undefined ? {} : {telegram}),
 					...(discord === undefined ? {} : {discord}),
 					...(profileImage === undefined ? {} : {profileImage}),
-					...(headerImage === undefined ? {} : {headerImage})
+					...(headerImage === undefined ? {} : {headerImage}),
+					...(seeleAddress === undefined ? {} : {seeleAddress})
 				})
 
 			res.status(200).end("OK")
