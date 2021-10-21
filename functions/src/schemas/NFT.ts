@@ -1,5 +1,5 @@
 import {JSONSchemaType} from "ajv"
-import ajv from "."
+import ajv from "./"
 import {NFT} from "../types/Nft"
 
 export type NFTSchemaType = Omit<NFT, "owner" | "ownerType" | "createdDate" | "media" | "attributes">
