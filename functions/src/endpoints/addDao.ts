@@ -1,11 +1,11 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
-import {isAddress} from "@ethersproject/address"
 import {Contract} from "@ethersproject/contracts"
 import GnosisSafe from "../abis/GnosisSafeL2.json"
 import {isBigNumberish} from "@ethersproject/bignumber/lib/bignumber"
 import provider from "../provider"
+import {validateDao} from "../schemas/Dao"
 
 const addDao = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -35,17 +35,12 @@ const addDao = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!req.body?.gnosisAddress) {
+			if (!validateDao(req.body)) {
 				res.status(400).end("Bad Payload")
 				return
 			}
 
 			const {gnosisAddress} = req.body
-
-			if (!isAddress(gnosisAddress)) {
-				res.status(400).end("Bad Address")
-				return
-			}
 
 			try {
 				const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)

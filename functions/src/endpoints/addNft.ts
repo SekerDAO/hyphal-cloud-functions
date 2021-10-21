@@ -4,6 +4,7 @@ import admin from "firebase-admin"
 import {Contract} from "@ethersproject/contracts"
 import provider from "../provider"
 import MultiArtToken from "../abis/MultiArtToken.json"
+import {validateNft} from "../schemas/Nft"
 
 const addNft = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -26,7 +27,7 @@ const addNft = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!(req.body?.nft && req.body.nft.id && req.body.nft.address)) {
+			if (!validateNft(req.body?.nft)) {
 				res.status(400).end("Bad Payload")
 				return
 			}

@@ -1,6 +1,7 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
+import {validateDomain} from "../schemas/User"
 
 const addMyDomain = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -23,7 +24,7 @@ const addMyDomain = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!req.body?.domain) {
+			if (!validateDomain(req.body?.domain)) {
 				res.status(400).end("Bad Payload")
 				return
 			}
