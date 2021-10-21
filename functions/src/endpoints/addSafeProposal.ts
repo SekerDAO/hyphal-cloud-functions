@@ -4,6 +4,7 @@ import admin from "firebase-admin"
 import {Contract} from "@ethersproject/contracts"
 import GnosisSafe from "../abis/GnosisSafeL2.json"
 import provider from "../provider"
+import {validateSafeProposal} from "../schemas/SafeProposal"
 
 const addSafeProposal = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -26,7 +27,7 @@ const addSafeProposal = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!(req.body?.gnosisAddress && req.body.title && req.body.state && req.body.type && req.body.signatures)) {
+			if (!validateSafeProposal(req.body)) {
 				res.status(400).end("Bad Payload")
 				return
 			}
