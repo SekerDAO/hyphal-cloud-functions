@@ -11,17 +11,17 @@ export type AbiScalar =
 	| "bytes"
 	| "string"
 
-type AbiArray = `${AbiScalar}[]`
+export type AbiArray = `${AbiScalar}[]`
 
 export type AbiDataType = AbiArray | AbiScalar
 
-type AbiParam = {
+export type AbiParam = {
 	internalType: AbiDataType
 	type: AbiDataType
 	name: string
 }
 
-type AbiEventInput = AbiParam & {
+export type AbiEventInput = AbiParam & {
 	indexed: boolean
 }
 
@@ -33,18 +33,18 @@ export type AbiFunction = {
 	type: "function"
 }
 
-type AbiFallbackFunction = {
+export type AbiFallbackFunction = {
 	state: "nonpayable"
 	type: "fallback"
 }
 
-type AbiEvent = {
+export type AbiEvent = {
 	anonymous: boolean
 	inputs: AbiEventInput[]
 	name: string
 	type: "event"
 }
 
-type AbiItem = AbiFunction | AbiEvent | AbiFallbackFunction
+export type AbiItem = AbiFunction | AbiEvent | AbiFallbackFunction
 
 export type Abi = AbiItem[]

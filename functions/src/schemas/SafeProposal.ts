@@ -1,6 +1,20 @@
 import {JSONSchemaType} from "ajv"
 import ajv from "./"
-import {SafeProposal} from "../types/SafeProposal"
+import {SafeProposal, SafeSignature, SafeProposalState} from "../types/SafeProposal"
+import {AbiItemSchema} from "./Abi"
+
+export const SignatureSchema: JSONSchemaType<SafeSignature> = {
+	type: "object",
+	properties: {
+		signer: {
+			type: "string"
+		},
+		data: {
+			type: "string"
+		}
+	},
+	required: ["signer", "data"]
+}
 
 export const SafeProposalSchema: JSONSchemaType<SafeProposal> = {
 	type: "object",
@@ -13,9 +27,11 @@ export const SafeProposalSchema: JSONSchemaType<SafeProposal> = {
 			type: "string"
 		},
 		state: {
+			type: "string",
 			enum: ["active", "canceled", "executed", "passed", "failed", "queued", "waiting"]
 		},
 		type: {
+			type: "string",
 			enum: ["changeRole", "createAuction", "cancelAuction", "generalEVM", "decentralizeDAO"]
 		},
 		userAddress: {
@@ -23,7 +39,7 @@ export const SafeProposalSchema: JSONSchemaType<SafeProposal> = {
 			format: "address"
 		},
 		id: {
-			type: "string",
+			type: "integer",
 			nullable: true
 		},
 		description: {
@@ -40,6 +56,7 @@ export const SafeProposalSchema: JSONSchemaType<SafeProposal> = {
 			format: "address"
 		},
 		newRole: {
+			type: "string",
 			enum: ["admin", "kick"],
 			nullable: true
 		},
@@ -52,11 +69,13 @@ export const SafeProposalSchema: JSONSchemaType<SafeProposal> = {
 			nullable: true
 		},
 		signatures: {
-			type: "array"
+			type: "array",
+			items: SignatureSchema
 		},
 		signaturesStep2: {
 			type: "array",
-			nullable: true
+			nullable: true,
+			items: SignatureSchema
 		},
 		auctionId: {
 			type: "number",
@@ -104,6 +123,7 @@ export const SafeProposalSchema: JSONSchemaType<SafeProposal> = {
 		},
 		contractAbi: {
 			type: "array",
+			items: AbiItemSchema,
 			nullable: true
 		},
 		contractMethod: {
@@ -112,7 +132,8 @@ export const SafeProposalSchema: JSONSchemaType<SafeProposal> = {
 		},
 		callArgs: {
 			type: "object",
-			nullable: true
+			nullable: true,
+			required: []
 		},
 		daoVotingThreshold: {
 			type: "number",
@@ -126,4 +147,27 @@ export const SafeProposalSchema: JSONSchemaType<SafeProposal> = {
 	required: ["gnosisAddress", "title", "state", "userAddress", "type", "signatures"]
 }
 
+export const SafeProposalSignatureSchema: JSONSchemaType<{
+	proposalId: string
+	signature: SafeSignature
+	signatureStep2: SafeSignature
+	newState?: SafeProposalState
+}> = {
+	type: "object",
+	properties: {
+		proposalId: {
+			type: "string"
+		},
+		signature: SignatureSchema,
+		signatureStep2: SignatureSchema,
+		newState: {
+			type: "string",
+			enum: ["active", "canceled", "executed", "passed", "failed", "queued", "waiting"],
+			nullable: true
+		}
+	},
+	required: ["proposalId", "signature", "signatureStep2"]
+}
+
 export const validateSafeProposal = ajv.compile(SafeProposalSchema)
+export const validateSafeProposalSignature = ajv.compile(SafeProposalSignatureSchema)
