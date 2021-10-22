@@ -1,11 +1,11 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
-import {isAddress} from "@ethersproject/address"
 import {Contract} from "@ethersproject/contracts"
 import GnosisSafe from "../abis/GnosisSafeL2.json"
 import provider from "../provider"
 import MultiArtToken from "../abis/MultiArtToken.json"
+import {validateDeleteDaoNft} from "../schemas/DaoNft"
 
 const deleteDaoNft = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -28,12 +28,8 @@ const deleteDaoNft = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!(req.body?.address && req.body.nftId)) {
+			if (!validateDeleteDaoNft(req.body)) {
 				res.status(400).end("Bad Payload")
-				return
-			}
-			if (!isAddress(req.body.address)) {
-				res.status(400).end("Bad DAO Address")
 				return
 			}
 

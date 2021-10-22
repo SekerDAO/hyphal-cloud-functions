@@ -17,4 +17,19 @@ export const DaoNftSchema: JSONSchemaType<DaoNFTSchema> = {
 	additionalProperties: false
 }
 
+export const DeleteDaoNftSchema: JSONSchemaType<{address: string; nftId: string}> = {
+	type: "object",
+	properties: {
+		address: {
+			type: "string",
+			format: "address"
+		},
+		nftId: {
+			type: "string"
+		}
+	},
+	required: ["address", "nftId"]
+}
+
 export const validateDaoNft = ajv.compile(DaoNftSchema)
+export const validateDeleteDaoNft = ajv.compile(DeleteDaoNftSchema)

@@ -36,4 +36,15 @@ export const NFTSchema: JSONSchemaType<NFTSchemaType> = {
 	required: ["address", "id", "name", "creator"]
 }
 
+export const DeleteNFTSchema: JSONSchemaType<{id: string}> = {
+	type: "object",
+	properties: {
+		id: {
+			type: "string"
+		}
+	},
+	required: ["id"]
+}
+
 export const validateNft = ajv.compile(NFTSchema)
+export const validateDeleteNft = ajv.compile(DeleteNFTSchema)

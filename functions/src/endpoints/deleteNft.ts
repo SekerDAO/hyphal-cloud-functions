@@ -4,6 +4,7 @@ import admin from "firebase-admin"
 import {Contract} from "@ethersproject/contracts"
 import MultiArtToken from "../abis/MultiArtToken.json"
 import provider from "../provider"
+import {validateDeleteNft} from "../schemas/NFT"
 
 const deleteNft = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -26,7 +27,7 @@ const deleteNft = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!req.body?.id) {
+			if (!validateDeleteNft(req.body)) {
 				res.status(400).end("Bad Payload")
 				return
 			}

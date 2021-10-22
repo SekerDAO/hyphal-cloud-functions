@@ -8,7 +8,20 @@ export const DaoSchema: JSONSchemaType<Dao> = {
 		gnosisAddress: {
 			type: "string",
 			format: "address"
-		}
+		},
+		name: {
+			type: "string",
+			nullable: true
+		},
+		estimated: {type: "string", nullable: true},
+		description: {type: "string", nullable: true},
+		website: {type: "string", nullable: true},
+		twitter: {type: "string", nullable: true},
+		telegram: {type: "string", nullable: true},
+		discord: {type: "string", nullable: true},
+		profileImage: {type: "string", nullable: true},
+		headerImage: {type: "string", nullable: true},
+		seeleAddress: {type: "string", nullable: true, format: "address"}
 	},
 	required: ["gnosisAddress"]
 }
