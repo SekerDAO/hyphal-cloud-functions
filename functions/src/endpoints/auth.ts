@@ -13,8 +13,7 @@ const auth = https.onRequest((req, res) =>
 			}
 
 			if (!validateAuth(req.body)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateAuth.errors))
 			}
 
 			const recoveredAccount = verifyMessage(

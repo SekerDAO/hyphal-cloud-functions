@@ -28,8 +28,7 @@ const addSafeProposal = https.onRequest((req, res) =>
 			}
 
 			if (!validateSafeProposal(req.body)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateSafeProposal.errors))
 			}
 
 			const {

@@ -28,8 +28,7 @@ const addNft = https.onRequest((req, res) =>
 			}
 
 			if (!validateNft(req.body?.nft)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateNft.errors))
 			}
 
 			const {nft} = req.body

@@ -25,8 +25,7 @@ const editUser = https.onRequest((req, res) =>
 			}
 
 			if (!validateUser(req.body)) {
-				res.status(400).end("Unexpected empty body")
-				return
+				res.status(400).end(JSON.stringify(validateUser.errors))
 			}
 
 			const {name, url, bio, location, email, website, twitter, instagram, profileImage, headerImage} = req.body

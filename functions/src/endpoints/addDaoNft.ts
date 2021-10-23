@@ -2,7 +2,6 @@ import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 import {Contract} from "@ethersproject/contracts"
-import {DefinedError} from "ajv"
 import GnosisSafe from "../abis/GnosisSafeL2.json"
 import provider from "../provider"
 import MultiArtToken from "../abis/MultiArtToken.json"
@@ -30,13 +29,7 @@ const addDaoNft = https.onRequest((req, res) =>
 			}
 
 			if (!validateDaoNft(req.body)) {
-				for (const err of validateDaoNft.errors as DefinedError[]) {
-					switch (err.propertyName) {
-						case "address":
-							res.status(400).end("Bad DAO or NFT Address")
-					}
-				}
-				res.status(400).end("Bad Payload")
+				res.status(400).end(JSON.stringify(validateDaoNft.errors))
 			}
 
 			const {address, nft} = req.body

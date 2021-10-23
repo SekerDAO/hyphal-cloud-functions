@@ -25,8 +25,7 @@ const addMyDao = https.onRequest((req, res) =>
 			}
 
 			if (!validateDao(req.body?.dao)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateDao.errors))
 			}
 
 			const {dao} = req.body

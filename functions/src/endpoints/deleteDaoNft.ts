@@ -29,8 +29,7 @@ const deleteDaoNft = https.onRequest((req, res) =>
 			}
 
 			if (!validateDeleteDaoNft(req.body)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateDeleteDaoNft.errors))
 			}
 
 			const {address, nftId} = req.body

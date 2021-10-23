@@ -25,8 +25,7 @@ const addMyDomain = https.onRequest((req, res) =>
 			}
 
 			if (!validateDomain(req.body?.domain)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateDomain.errors))
 			}
 
 			const {domain} = req.body

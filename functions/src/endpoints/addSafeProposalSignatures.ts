@@ -28,8 +28,7 @@ const addSafeProposalSignatures = https.onRequest((req, res) =>
 			}
 
 			if (!validateSafeProposalSignature(req.body)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateSafeProposalSignature.errors))
 			}
 
 			const {proposalId, signature, signatureStep2, newState} = req.body

@@ -28,8 +28,7 @@ const editDao = https.onRequest((req, res) =>
 			}
 
 			if (!validateDao(req.body)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateDao.errors))
 			}
 
 			const {gnosisAddress, name, description, website, twitter, telegram, discord, profileImage, headerImage} =

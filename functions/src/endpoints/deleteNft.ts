@@ -28,8 +28,7 @@ const deleteNft = https.onRequest((req, res) =>
 			}
 
 			if (!validateDeleteNft(req.body)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateDeleteNft.errors))
 			}
 
 			const {id} = req.body

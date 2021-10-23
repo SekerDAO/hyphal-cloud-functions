@@ -12,7 +12,6 @@ const addDao = https.onRequest((req, res) =>
 		try {
 			if (req.method !== "POST") {
 				res.status(400).end("Only POST method is supported")
-				return
 			}
 
 			if (!(req.headers.authorization && req.headers.authorization.startsWith("Bearer "))) {
@@ -36,8 +35,7 @@ const addDao = https.onRequest((req, res) =>
 			}
 
 			if (!validateDao(req.body)) {
-				res.status(400).end("Bad Payload")
-				return
+				res.status(400).end(JSON.stringify(validateDao.errors))
 			}
 
 			const {gnosisAddress} = req.body
@@ -47,11 +45,9 @@ const addDao = https.onRequest((req, res) =>
 				const threshold = await safeContract.getThreshold()
 				if (!isBigNumberish(threshold)) {
 					res.status(400).send("No safe contract is deployed on this address")
-					return
 				}
 			} catch (e) {
 				res.status(400).send("No safe contract is deployed on this address")
-				return
 			}
 
 			const dao = await admin.firestore().collection("DAOs").doc(gnosisAddress.toLowerCase()).get()
