@@ -1,4 +1,4 @@
-type NFTMediaInfo = {
+export type NFTMediaInfo = {
 	dimensions: string
 	mimeType: string
 	size: number

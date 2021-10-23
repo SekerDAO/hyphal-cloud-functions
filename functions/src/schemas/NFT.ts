@@ -1,8 +1,27 @@
 import {JSONSchemaType} from "ajv"
 import ajv from "./"
-import {NFT} from "../types/Nft"
+import {NFT, NFTMediaInfo} from "../types/Nft"
 
-export type NFTSchemaType = Omit<NFT, "owner" | "ownerType" | "createdDate" | "media" | "attributes">
+export const NFTMediaSchema: JSONSchemaType<NFTMediaInfo> = {
+	type: "object",
+	properties: {
+		dimensions: {
+			type: "string"
+		},
+		mimeType: {
+			type: "string"
+		},
+		size: {
+			type: "number"
+		},
+		uri: {
+			type: "string"
+		}
+	},
+	required: ["dimensions", "mimeType", "size", "uri"]
+}
+
+export type NFTSchemaType = Omit<NFT, "owner" | "ownerType" | "createdDate">
 export const NFTSchema: JSONSchemaType<NFTSchemaType> = {
 	type: "object",
 	properties: {
@@ -16,6 +35,10 @@ export const NFTSchema: JSONSchemaType<NFTSchemaType> = {
 		name: {
 			type: "string"
 		},
+		creator: {
+			type: "string",
+			format: "address"
+		},
 		thumbnail: {
 			type: "string",
 			nullable: true
@@ -28,9 +51,14 @@ export const NFTSchema: JSONSchemaType<NFTSchemaType> = {
 			type: "string",
 			nullable: true
 		},
-		creator: {
-			type: "string",
-			format: "address"
+		attributes: {
+			nullable: true,
+			type: "object",
+			required: []
+		},
+		media: {
+			...NFTMediaSchema,
+			nullable: true
 		}
 	},
 	required: ["address", "id", "name", "creator"]
