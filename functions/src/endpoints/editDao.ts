@@ -48,7 +48,7 @@ const editDao = https.onRequest((req, res) =>
 				discord,
 				profileImage,
 				headerImage,
-				seeleAddress
+				usulAddress
 			} = req.body
 
 			const dao = await admin.firestore().collection("DAOs").doc(gnosisAddress.toLowerCase()).get()
@@ -77,7 +77,7 @@ const editDao = https.onRequest((req, res) =>
 					...(discord === undefined ? {} : {discord}),
 					...(profileImage === undefined ? {} : {profileImage}),
 					...(headerImage === undefined ? {} : {headerImage}),
-					...(seeleAddress === undefined ? {} : {seeleAddress})
+					...(usulAddress === undefined ? {} : {usulAddress})
 				})
 
 			res.status(200).end("OK")
