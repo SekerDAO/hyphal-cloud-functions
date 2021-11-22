@@ -60,7 +60,8 @@ const addSafeProposal = https.onRequest((req, res) =>
 				daoVotingThreshold,
 				gracePeriod,
 				seeleAddress,
-				multiTx
+				multiTx,
+				nonce
 			} = req.body
 
 			const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)
@@ -103,7 +104,8 @@ const addSafeProposal = https.onRequest((req, res) =>
 					...(daoVotingThreshold === undefined ? {} : {daoVotingThreshold}),
 					...(gracePeriod === undefined ? {} : {gracePeriod}),
 					...(seeleAddress === undefined ? {} : {seeleAddress}),
-					...(multiTx === undefined ? {} : {multiTx})
+					...(multiTx === undefined ? {} : {multiTx}),
+					...(nonce === undefined ? {} : {nonce})
 				})
 
 			res.status(200).end("OK")
