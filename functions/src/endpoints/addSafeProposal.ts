@@ -59,7 +59,7 @@ const addSafeProposal = https.onRequest((req, res) =>
 				callArgs,
 				daoVotingThreshold,
 				gracePeriod,
-				seeleAddress,
+				usulAddress,
 				multiTx,
 				nonce
 			} = req.body
@@ -103,7 +103,7 @@ const addSafeProposal = https.onRequest((req, res) =>
 					...(callArgs === undefined ? {} : {callArgs}),
 					...(daoVotingThreshold === undefined ? {} : {daoVotingThreshold}),
 					...(gracePeriod === undefined ? {} : {gracePeriod}),
-					...(seeleAddress === undefined ? {} : {seeleAddress}),
+					...(usulAddress === undefined ? {} : {usulAddress}),
 					...(multiTx === undefined ? {} : {multiTx}),
 					...(nonce === undefined ? {} : {nonce})
 				})
