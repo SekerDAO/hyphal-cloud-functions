@@ -21,7 +21,7 @@ export const DaoSchema: JSONSchemaType<Dao> = {
 		discord: {type: "string", nullable: true},
 		profileImage: {type: "string", nullable: true},
 		headerImage: {type: "string", nullable: true},
-		seeleAddress: {type: "string", nullable: true, format: "address"}
+		usulAddress: {type: "string", nullable: true, format: "address"}
 	},
 	required: ["gnosisAddress"]
 }

@@ -13,7 +13,7 @@ export type Dao = {
 	profileImage?: string
 	headerImage?: string
 	// Created after deploying Seele module
-	seeleAddress?: string
+	usulAddress?: string
 }
 
 export type DaoNft = {
