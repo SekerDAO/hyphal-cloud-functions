@@ -11,6 +11,7 @@ import deleteNft from "./endpoints/deleteNft"
 import addMyDao from "./endpoints/addMyDao"
 import addMyDomain from "./endpoints/addMyDomain"
 import editUser from "./endpoints/editUser"
+import addStrategyProposal from "./endpoints/addStrategyProposal"
 
 admin.initializeApp({
 	serviceAccountId: "token-walk@appspot.gserviceaccount.com"
@@ -28,5 +29,6 @@ export {
 	deleteNft,
 	addMyDomain,
 	addMyDao,
-	editUser
+	editUser,
+	addStrategyProposal
 }
