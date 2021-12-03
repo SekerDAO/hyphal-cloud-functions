@@ -33,7 +33,8 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					req.body.contractMethod &&
 					req.body.args &&
 					req.body.title &&
-					req.body.state
+					req.body.state &&
+					req.body.proposalId
 				)
 			) {
 				res.status(400).end("Bad Payload")
@@ -44,6 +45,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 				gnosisAddress,
 				strategyAddress,
 				strategyType,
+				proposalId,
 				contractAddress,
 				contractAbi,
 				contractMethod,
@@ -60,6 +62,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					gnosisAddress,
 					strategyAddress,
 					strategyType,
+					proposalId,
 					contractAddress,
 					contractAbi,
 					contractMethod,
