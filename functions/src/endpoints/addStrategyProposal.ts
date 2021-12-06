@@ -33,7 +33,6 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					req.body.contractMethod &&
 					req.body.args &&
 					req.body.title &&
-					req.body.state &&
 					req.body.id
 				)
 			) {
