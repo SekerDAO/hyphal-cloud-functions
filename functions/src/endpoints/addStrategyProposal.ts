@@ -51,8 +51,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 				contractMethod,
 				args,
 				title,
-				description,
-				state
+				description
 			} = req.body
 
 			await admin
@@ -69,8 +68,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					args,
 					userAddress: user.toLowerCase(),
 					title,
-					...(description === undefined ? {} : {description}),
-					state
+					...(description === undefined ? {} : {description})
 				})
 
 			res.status(200).end("OK")
