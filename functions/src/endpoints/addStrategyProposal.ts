@@ -33,7 +33,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					req.body.contractMethod &&
 					req.body.args &&
 					req.body.title &&
-					req.body.id
+					req.body.id != undefined
 				)
 			) {
 				res.status(400).end("Bad Payload")
