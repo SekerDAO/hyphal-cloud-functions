@@ -10,6 +10,9 @@ service cloud.firestore {
     match /safeProposals/{proposal} {
       allow read;
     }
+    match /strategyProposals/{proposal} {
+      allow read;
+    }
     match /users/{user} {
       allow read;
     }
