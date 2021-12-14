@@ -28,10 +28,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					req.body?.gnosisAddress &&
 					req.body.strategyAddress &&
 					req.body.strategyType &&
-					req.body.contractAddress &&
-					req.body.contractAbi &&
-					req.body.contractMethod &&
-					req.body.args &&
+					req.body.transactions &&
 					req.body.title &&
 					req.body.id != undefined
 				)
@@ -40,18 +37,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 				return
 			}
 
-			const {
-				gnosisAddress,
-				strategyAddress,
-				strategyType,
-				id,
-				contractAddress,
-				contractAbi,
-				contractMethod,
-				args,
-				title,
-				description
-			} = req.body
+			const {gnosisAddress, strategyAddress, strategyType, id, transactions, title, description} = req.body
 
 			await admin
 				.firestore()
@@ -61,10 +47,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					strategyAddress,
 					strategyType,
 					id,
-					contractAddress,
-					contractAbi,
-					contractMethod,
-					args,
+					transactions,
 					userAddress: user.toLowerCase(),
 					title,
 					...(description === undefined ? {} : {description})
