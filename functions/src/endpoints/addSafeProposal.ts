@@ -61,7 +61,7 @@ const addSafeProposal = https.onRequest((req, res) =>
 
 			const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)
 			const addresses: string[] = await safeContract.getOwners()
-			if (!addresses.find(addr => addr.toLowerCase() === user.toLowerCase())) {
+			if (!(type === "decentralizeDAO" || addresses.find(addr => addr.toLowerCase() === user.toLowerCase()))) {
 				res.status(403).send("Forbidden")
 				return
 			}
