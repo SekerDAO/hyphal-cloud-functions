@@ -2,7 +2,7 @@ import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 
-const addMyDao = https.onRequest((req, res) =>
+const removeMyDao = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
 		try {
 			if (req.method !== "POST") {
@@ -32,8 +32,13 @@ const addMyDao = https.onRequest((req, res) =>
 
 			const userSnapshot = await admin.firestore().collection("users").doc(user).get()
 
-			if (userSnapshot.data()!.myDaos.includes(dao)) {
-				res.status(400).end("Dao already added")
+			if (
+				!userSnapshot
+					.data()!
+					.myDaos.map((_dao: string) => _dao.toLowerCase())
+					.includes(dao.toLowerCase())
+			) {
+				res.status(400).end("Dao not found")
 			}
 
 			await admin
@@ -41,7 +46,7 @@ const addMyDao = https.onRequest((req, res) =>
 				.collection("users")
 				.doc(user)
 				.update({
-					myDaos: [...(userSnapshot.data()?.myDaos ?? []), dao]
+					myDaos: userSnapshot.data()!.myDaos.filter((_dao: string) => _dao.toLowerCase() !== dao.toLowerCase())
 				})
 
 			res.status(200).end("OK")
@@ -52,4 +57,4 @@ const addMyDao = https.onRequest((req, res) =>
 	})
 )
 
-export default addMyDao
+export default removeMyDao
