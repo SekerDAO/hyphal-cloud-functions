@@ -13,9 +13,10 @@ import addMyDomain from "./endpoints/addMyDomain"
 import editUser from "./endpoints/editUser"
 import addStrategyProposal from "./endpoints/addStrategyProposal"
 import removeMyDao from "./endpoints/removeMyDao"
+import {config} from "firebase-functions"
 
 admin.initializeApp({
-	serviceAccountId: "token-walk@appspot.gserviceaccount.com"
+	serviceAccountId: config().fb.service_account
 })
 
 export {
