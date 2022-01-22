@@ -56,7 +56,10 @@ const addSafeProposal = https.onRequest((req, res) =>
 				gracePeriod,
 				usulAddress,
 				multiTx,
-				nonce
+				nonce,
+				usulDeployType,
+				bridgeAddress,
+				sideNetSafeAddress
 			} = req.body
 
 			const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)
@@ -95,7 +98,10 @@ const addSafeProposal = https.onRequest((req, res) =>
 					...(gracePeriod === undefined ? {} : {gracePeriod}),
 					...(usulAddress === undefined ? {} : {usulAddress}),
 					...(multiTx === undefined ? {} : {multiTx}),
-					...(nonce === undefined ? {} : {nonce})
+					...(nonce === undefined ? {} : {nonce}),
+					...(usulDeployType === undefined ? {} : {usulDeployType}),
+					...(bridgeAddress === undefined ? {} : {bridgeAddress}),
+					...(sideNetSafeAddress === undefined ? {} : {sideNetSafeAddress})
 				})
 
 			res.status(200).end("OK")
