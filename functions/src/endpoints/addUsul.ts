@@ -6,7 +6,7 @@ import {Contract} from "@ethersproject/contracts"
 import GnosisSafe from "../abis/GnosisSafeL2.json"
 import provider from "../provider"
 
-const editDao = https.onRequest((req, res) =>
+const addUsul = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
 		try {
 			if (req.method !== "POST") {
@@ -27,19 +27,22 @@ const editDao = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!req.body?.gnosisAddress) {
+			if (!(req.body?.gnosisAddress && req.body.usul?.usulAddress && req.body.usul.deployType)) {
 				res.status(400).end("Bad Payload")
 				return
 			}
 			if (!isAddress(req.body.gnosisAddress)) {
-				res.status(400).end("Bad Address")
+				res.status(400).end("Bad Gnosis Address")
+				return
+			}
+			if (!isAddress(req.body.usul.usulAddress)) {
+				res.status(400).end("Bad Usul Address")
 				return
 			}
 
 			// TODO: add schema validation
 
-			const {gnosisAddress, name, description, website, twitter, telegram, discord, profileImage, headerImage} =
-				req.body
+			const {gnosisAddress, usul} = req.body
 
 			const dao = await admin.firestore().collection("DAOs").doc(gnosisAddress.toLowerCase()).get()
 			if (!dao.exists) {
@@ -47,6 +50,7 @@ const editDao = https.onRequest((req, res) =>
 				return
 			}
 
+			// TODO: check strategy members
 			const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)
 			const addresses: string[] = await safeContract.getOwners()
 			if (!addresses.find(addr => addr.toLowerCase() === user.toLowerCase())) {
@@ -59,14 +63,7 @@ const editDao = https.onRequest((req, res) =>
 				.collection("DAOs")
 				.doc(gnosisAddress.toLowerCase())
 				.update({
-					...(name === undefined ? {} : {name}),
-					...(description === undefined ? {} : {description}),
-					...(website === undefined ? {} : {website}),
-					...(twitter === undefined ? {} : {twitter}),
-					...(telegram === undefined ? {} : {telegram}),
-					...(discord === undefined ? {} : {discord}),
-					...(profileImage === undefined ? {} : {profileImage}),
-					...(headerImage === undefined ? {} : {headerImage})
+					usuls: [...dao.data()!.usuls, usul]
 				})
 
 			res.status(200).end("OK")
@@ -77,4 +74,4 @@ const editDao = https.onRequest((req, res) =>
 	})
 )
 
-export default editDao
+export default addUsul

@@ -26,6 +26,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 			if (
 				!(
 					req.body?.gnosisAddress &&
+					req.body.usulAddress &&
 					req.body.strategyAddress &&
 					req.body.strategyType &&
 					req.body.transactions &&
@@ -37,13 +38,14 @@ const addStrategyProposal = https.onRequest((req, res) =>
 				return
 			}
 
-			const {gnosisAddress, strategyAddress, strategyType, id, transactions, title, description} = req.body
+			const {gnosisAddress, usulAddress, strategyAddress, strategyType, id, transactions, title, description} = req.body
 
 			await admin
 				.firestore()
 				.collection("strategyProposals")
 				.add({
 					gnosisAddress,
+					usulAddress,
 					strategyAddress,
 					strategyType,
 					id,

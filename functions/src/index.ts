@@ -14,6 +14,7 @@ import editUser from "./endpoints/editUser"
 import addStrategyProposal from "./endpoints/addStrategyProposal"
 import removeMyDao from "./endpoints/removeMyDao"
 import {config} from "firebase-functions"
+import addUsul from "./endpoints/addUsul"
 
 admin.initializeApp({
 	serviceAccountId: config().fb.service_account
@@ -33,5 +34,6 @@ export {
 	addMyDao,
 	editUser,
 	addStrategyProposal,
-	removeMyDao
+	removeMyDao,
+	addUsul
 }

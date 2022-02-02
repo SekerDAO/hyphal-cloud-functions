@@ -66,7 +66,7 @@ const addDao = https.onRequest((req, res) =>
 					.firestore()
 					.collection("DAOs")
 					.doc(gnosisAddress.toLowerCase())
-					.set({name: gnosisAddress, estimated: new Date().toISOString()})
+					.set({name: gnosisAddress, estimated: new Date().toISOString(), usuls: []})
 			}
 
 			// add DAO to user's favourites
