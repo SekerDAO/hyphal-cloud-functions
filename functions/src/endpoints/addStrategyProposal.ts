@@ -29,6 +29,7 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					req.body.usulAddress &&
 					req.body.strategyAddress &&
 					req.body.strategyType &&
+					req.body.type &&
 					req.body.transactions &&
 					req.body.title &&
 					req.body.id != undefined
@@ -38,7 +39,20 @@ const addStrategyProposal = https.onRequest((req, res) =>
 				return
 			}
 
-			const {gnosisAddress, usulAddress, strategyAddress, strategyType, id, transactions, title, description} = req.body
+			const {
+				gnosisAddress,
+				usulAddress,
+				strategyAddress,
+				strategyType,
+				type,
+				id,
+				transactions,
+				title,
+				description,
+				newUsulAddress,
+				sideNetSafeAddress,
+				bridgeAddress
+			} = req.body
 
 			await admin
 				.firestore()
@@ -48,11 +62,15 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					usulAddress,
 					strategyAddress,
 					strategyType,
+					type,
 					id,
 					transactions,
 					userAddress: user.toLowerCase(),
 					title,
-					...(description === undefined ? {} : {description})
+					...(description === undefined ? {} : {description}),
+					...(newUsulAddress === undefined ? {} : {newUsulAddress}),
+					...(sideNetSafeAddress === undefined ? {} : {sideNetSafeAddress}),
+					...(bridgeAddress === undefined ? {} : {bridgeAddress})
 				})
 
 			res.status(200).end("OK")
