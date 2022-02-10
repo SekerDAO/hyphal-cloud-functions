@@ -73,7 +73,7 @@ const addSafeProposal = https.onRequest((req, res) =>
 				.firestore()
 				.collection("safeProposals")
 				.add({
-					gnosisAddress,
+					gnosisAddress: gnosisAddress.toLowerCase(),
 					userAddress: user.toLowerCase(),
 					title,
 					...(description === undefined ? {} : {description}),

@@ -58,9 +58,9 @@ const addStrategyProposal = https.onRequest((req, res) =>
 				.firestore()
 				.collection("strategyProposals")
 				.add({
-					gnosisAddress,
-					usulAddress,
-					strategyAddress,
+					gnosisAddress: gnosisAddress.toLowerCase(),
+					usulAddress: usulAddress.toLowerCase(),
+					strategyAddress: strategyAddress.toLowerCase(),
 					strategyType,
 					type,
 					id,
