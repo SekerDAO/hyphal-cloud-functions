@@ -49,24 +49,22 @@ const addSafeProposal = https.onRequest((req, res) =>
 				nftAddress,
 				duration,
 				reservePrice,
-				curatorAddress,
-				curatorFeePercentage,
 				auctionCurrencySymbol,
 				auctionCurrencyAddress,
-				contractAddress,
-				contractAbi,
-				contractMethod,
-				callArgs,
+				transactions,
 				daoVotingThreshold,
 				gracePeriod,
 				usulAddress,
 				multiTx,
-				nonce
+				nonce,
+				usulDeployType,
+				bridgeAddress,
+				sideNetSafeAddress
 			} = req.body
 
 			const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)
 			const addresses: string[] = await safeContract.getOwners()
-			if (!addresses.find(addr => addr.toLowerCase() === user.toLowerCase())) {
+			if (!(type === "decentralizeDAO" || addresses.find(addr => addr.toLowerCase() === user.toLowerCase()))) {
 				res.status(403).send("Forbidden")
 				return
 			}
@@ -75,7 +73,7 @@ const addSafeProposal = https.onRequest((req, res) =>
 				.firestore()
 				.collection("safeProposals")
 				.add({
-					gnosisAddress,
+					gnosisAddress: gnosisAddress.toLowerCase(),
 					userAddress: user.toLowerCase(),
 					title,
 					...(description === undefined ? {} : {description}),
@@ -93,19 +91,17 @@ const addSafeProposal = https.onRequest((req, res) =>
 					...(nftAddress === undefined ? {} : {nftAddress}),
 					...(duration === undefined ? {} : {duration}),
 					...(reservePrice === undefined ? {} : {reservePrice}),
-					...(curatorAddress === undefined ? {} : {curatorAddress}),
-					...(curatorFeePercentage === undefined ? {} : {curatorFeePercentage}),
 					...(auctionCurrencySymbol === undefined ? {} : {auctionCurrencySymbol}),
 					...(auctionCurrencyAddress === undefined ? {} : {auctionCurrencyAddress}),
-					...(contractAddress === undefined ? {} : {contractAddress}),
-					...(contractAbi === undefined ? {} : {contractAbi}),
-					...(contractMethod === undefined ? {} : {contractMethod}),
-					...(callArgs === undefined ? {} : {callArgs}),
+					...(transactions === undefined ? {} : {transactions}),
 					...(daoVotingThreshold === undefined ? {} : {daoVotingThreshold}),
 					...(gracePeriod === undefined ? {} : {gracePeriod}),
 					...(usulAddress === undefined ? {} : {usulAddress}),
 					...(multiTx === undefined ? {} : {multiTx}),
-					...(nonce === undefined ? {} : {nonce})
+					...(nonce === undefined ? {} : {nonce}),
+					...(usulDeployType === undefined ? {} : {usulDeployType}),
+					...(bridgeAddress === undefined ? {} : {bridgeAddress}),
+					...(sideNetSafeAddress === undefined ? {} : {sideNetSafeAddress})
 				})
 
 			res.status(200).end("OK")

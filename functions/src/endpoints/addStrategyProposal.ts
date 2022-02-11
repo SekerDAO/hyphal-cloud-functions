@@ -26,14 +26,13 @@ const addStrategyProposal = https.onRequest((req, res) =>
 			if (
 				!(
 					req.body?.gnosisAddress &&
+					req.body.usulAddress &&
 					req.body.strategyAddress &&
 					req.body.strategyType &&
-					req.body.contractAddress &&
-					req.body.contractAbi &&
-					req.body.contractMethod &&
-					req.body.args &&
+					req.body.type &&
+					req.body.transactions &&
 					req.body.title &&
-					req.body.state
+					req.body.id != undefined
 				)
 			) {
 				res.status(400).end("Bad Payload")
@@ -42,32 +41,36 @@ const addStrategyProposal = https.onRequest((req, res) =>
 
 			const {
 				gnosisAddress,
+				usulAddress,
 				strategyAddress,
 				strategyType,
-				contractAddress,
-				contractAbi,
-				contractMethod,
-				args,
+				type,
+				id,
+				transactions,
 				title,
 				description,
-				state
+				newUsulAddress,
+				sideNetSafeAddress,
+				bridgeAddress
 			} = req.body
 
 			await admin
 				.firestore()
 				.collection("strategyProposals")
 				.add({
-					gnosisAddress,
-					strategyAddress,
+					gnosisAddress: gnosisAddress.toLowerCase(),
+					usulAddress: usulAddress.toLowerCase(),
+					strategyAddress: strategyAddress.toLowerCase(),
 					strategyType,
-					contractAddress,
-					contractAbi,
-					contractMethod,
-					args,
+					type,
+					id,
+					transactions,
 					userAddress: user.toLowerCase(),
 					title,
 					...(description === undefined ? {} : {description}),
-					state
+					...(newUsulAddress === undefined ? {} : {newUsulAddress}),
+					...(sideNetSafeAddress === undefined ? {} : {sideNetSafeAddress}),
+					...(bridgeAddress === undefined ? {} : {bridgeAddress})
 				})
 
 			res.status(200).end("OK")

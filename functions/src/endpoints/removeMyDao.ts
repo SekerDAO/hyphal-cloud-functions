@@ -1,9 +1,8 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
-import {validateDao} from "../schemas/Dao"
 
-const addMyDao = https.onRequest((req, res) =>
+const removeMyDao = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
 		try {
 			if (req.method !== "POST") {
@@ -24,16 +23,22 @@ const addMyDao = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!validateDao(req.body?.dao)) {
-				res.status(400).end(JSON.stringify(validateDao.errors))
+			if (!req.body?.dao) {
+				res.status(400).end("Bad Payload")
+				return
 			}
 
 			const {dao} = req.body
 
 			const userSnapshot = await admin.firestore().collection("users").doc(user).get()
 
-			if (userSnapshot.data()!.myDaos.includes(dao)) {
-				res.status(400).end("Dao already added")
+			if (
+				!userSnapshot
+					.data()!
+					.myDaos.map((_dao: string) => _dao.toLowerCase())
+					.includes(dao.toLowerCase())
+			) {
+				res.status(400).end("Dao not found")
 			}
 
 			await admin
@@ -41,7 +46,7 @@ const addMyDao = https.onRequest((req, res) =>
 				.collection("users")
 				.doc(user)
 				.update({
-					myDaos: [...(userSnapshot.data()?.myDaos ?? []), dao]
+					myDaos: userSnapshot.data()!.myDaos.filter((_dao: string) => _dao.toLowerCase() !== dao.toLowerCase())
 				})
 
 			res.status(200).end("OK")
@@ -52,4 +57,4 @@ const addMyDao = https.onRequest((req, res) =>
 	})
 )
 
-export default addMyDao
+export default removeMyDao

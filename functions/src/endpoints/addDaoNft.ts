@@ -2,7 +2,6 @@ import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 import {Contract} from "@ethersproject/contracts"
-import GnosisSafe from "../abis/GnosisSafeL2.json"
 import provider from "../provider"
 import MultiArtToken from "../abis/MultiArtToken.json"
 import {validateDaoNft} from "../schemas/DaoNft"
@@ -19,10 +18,10 @@ const addDaoNft = https.onRequest((req, res) =>
 				res.status(401).send("Unauthorized")
 				return
 			}
-			let user: string
+
 			const idToken = req.headers.authorization.split("Bearer ")[1]
 			try {
-				user = (await admin.auth().verifyIdToken(idToken)).uid
+				await admin.auth().verifyIdToken(idToken)
 			} catch (error) {
 				res.status(401).send("Unauthorized")
 				return
@@ -37,13 +36,6 @@ const addDaoNft = https.onRequest((req, res) =>
 			const dao = await admin.firestore().collection("DAOs").doc(address.toLowerCase()).get()
 			if (!dao.exists) {
 				res.status(400).end("DAO not found")
-				return
-			}
-
-			const safeContract = new Contract(address, GnosisSafe.abi, provider)
-			const addresses: string[] = await safeContract.getOwners()
-			if (!addresses.find(addr => addr.toLowerCase() === user.toLowerCase())) {
-				res.status(403).send("Forbidden")
 				return
 			}
 
