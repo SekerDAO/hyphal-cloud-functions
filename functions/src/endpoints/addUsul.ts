@@ -2,9 +2,6 @@ import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 import {isAddress} from "@ethersproject/address"
-import {Contract} from "@ethersproject/contracts"
-import GnosisSafe from "../abis/GnosisSafeL2.json"
-import provider from "../provider"
 
 const addUsul = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -18,10 +15,9 @@ const addUsul = https.onRequest((req, res) =>
 				res.status(401).send("Unauthorized")
 				return
 			}
-			let user: string
 			const idToken = req.headers.authorization.split("Bearer ")[1]
 			try {
-				user = (await admin.auth().verifyIdToken(idToken)).uid
+				await admin.auth().verifyIdToken(idToken)
 			} catch (error) {
 				res.status(401).send("Unauthorized")
 				return
@@ -50,13 +46,7 @@ const addUsul = https.onRequest((req, res) =>
 				return
 			}
 
-			// TODO: check strategy members
-			const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)
-			const addresses: string[] = await safeContract.getOwners()
-			if (!addresses.find(addr => addr.toLowerCase() === user.toLowerCase())) {
-				res.status(403).send("Forbidden")
-				return
-			}
+			// TODO: modules check!
 
 			await admin
 				.firestore()
