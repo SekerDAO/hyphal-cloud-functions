@@ -51,7 +51,8 @@ const addStrategyProposal = https.onRequest((req, res) =>
 				description,
 				newUsulAddress,
 				sideNetSafeAddress,
-				bridgeAddress
+				bridgeAddress,
+				sideChain
 			} = req.body
 
 			await admin
@@ -70,7 +71,8 @@ const addStrategyProposal = https.onRequest((req, res) =>
 					...(description === undefined ? {} : {description}),
 					...(newUsulAddress === undefined ? {} : {newUsulAddress}),
 					...(sideNetSafeAddress === undefined ? {} : {sideNetSafeAddress}),
-					...(bridgeAddress === undefined ? {} : {bridgeAddress})
+					...(bridgeAddress === undefined ? {} : {bridgeAddress}),
+					...(sideChain === undefined ? {} : {sideChain})
 				})
 
 			res.status(200).end("OK")
