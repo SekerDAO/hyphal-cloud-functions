@@ -2,6 +2,9 @@ import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 import {isAddress} from "@ethersproject/address"
+import {Contract} from "@ethersproject/contracts"
+import GnosisSafeL2 from "../abis/GnosisSafeL2.json"
+import provider from "../provider"
 
 const addUsul = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -46,7 +49,16 @@ const addUsul = https.onRequest((req, res) =>
 				return
 			}
 
-			// TODO: modules check!
+			const safeContract = new Contract(gnosisAddress, GnosisSafeL2.abi, provider)
+			const modules = await safeContract.getModulesPaginated(
+				"0x0000000000000000000000000000000000000001",
+				20 // TODO: ideally this should not be hardcoded, but is there any other way?
+				// And is it reasonable to have more than 20 Usuls on a safe?
+			)
+			const moduleAddress = usul.deployType === "usulMulti" ? usul.bridgeAddress : usul.usulAddress
+			if (!modules[0].find((module: string) => module.toLowerCase() === moduleAddress.toLowerCase())) {
+				res.status(400).send("No such module on this safe")
+			}
 
 			await admin
 				.firestore()
