@@ -3,7 +3,7 @@ import cors from "cors"
 import admin from "firebase-admin"
 import {isAddress} from "@ethersproject/address"
 import {Contract} from "@ethersproject/contracts"
-import GnosisSafe from "../abis/GnosisSafeL2.json"
+import GnosisSafeL2 from "../abis/GnosisSafeL2.json"
 import provider from "../provider"
 
 const addUsul = https.onRequest((req, res) =>
@@ -18,10 +18,9 @@ const addUsul = https.onRequest((req, res) =>
 				res.status(401).send("Unauthorized")
 				return
 			}
-			let user: string
 			const idToken = req.headers.authorization.split("Bearer ")[1]
 			try {
-				user = (await admin.auth().verifyIdToken(idToken)).uid
+				await admin.auth().verifyIdToken(idToken)
 			} catch (error) {
 				res.status(401).send("Unauthorized")
 				return
@@ -50,12 +49,15 @@ const addUsul = https.onRequest((req, res) =>
 				return
 			}
 
-			// TODO: check strategy members
-			const safeContract = new Contract(gnosisAddress, GnosisSafe.abi, provider)
-			const addresses: string[] = await safeContract.getOwners()
-			if (!addresses.find(addr => addr.toLowerCase() === user.toLowerCase())) {
-				res.status(403).send("Forbidden")
-				return
+			const safeContract = new Contract(gnosisAddress, GnosisSafeL2.abi, provider)
+			const modules = await safeContract.getModulesPaginated(
+				"0x0000000000000000000000000000000000000001",
+				20 // TODO: ideally this should not be hardcoded, but is there any other way?
+				// And is it reasonable to have more than 20 Usuls on a safe?
+			)
+			const moduleAddress = usul.deployType === "usulMulti" ? usul.bridgeAddress : usul.usulAddress
+			if (!modules[0].find((module: string) => module.toLowerCase() === moduleAddress.toLowerCase())) {
+				res.status(400).send("No such module on this safe")
 			}
 
 			await admin
