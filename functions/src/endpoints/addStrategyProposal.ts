@@ -1,6 +1,7 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
+import {validateStrategyProposal} from "../schemas/StrategyProposal"
 
 const addStrategyProposal = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -23,20 +24,8 @@ const addStrategyProposal = https.onRequest((req, res) =>
 				return
 			}
 
-			if (
-				!(
-					req.body?.gnosisAddress &&
-					req.body.usulAddress &&
-					req.body.strategyAddress &&
-					req.body.strategyType &&
-					req.body.type &&
-					req.body.transactions &&
-					req.body.title &&
-					req.body.id != undefined
-				)
-			) {
-				res.status(400).end("Bad Payload")
-				return
+			if (!validateStrategyProposal(req.body)) {
+				res.status(400).end(JSON.stringify(validateStrategyProposal.errors))
 			}
 
 			const {

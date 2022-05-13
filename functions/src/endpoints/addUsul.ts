@@ -1,10 +1,10 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
-import {isAddress} from "@ethersproject/address"
 import {Contract} from "@ethersproject/contracts"
 import GnosisSafeL2 from "../abis/GnosisSafeL2.json"
 import provider from "../provider"
+import {validateUsul} from "../schemas/Usul"
 
 const addUsul = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -26,20 +26,9 @@ const addUsul = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!(req.body?.gnosisAddress && req.body.usul?.usulAddress && req.body.usul.deployType)) {
-				res.status(400).end("Bad Payload")
-				return
+			if (!validateUsul(req.body)) {
+				res.status(400).end(JSON.stringify(validateUsul.errors))
 			}
-			if (!isAddress(req.body.gnosisAddress)) {
-				res.status(400).end("Bad Gnosis Address")
-				return
-			}
-			if (!isAddress(req.body.usul.usulAddress)) {
-				res.status(400).end("Bad Usul Address")
-				return
-			}
-
-			// TODO: add schema validation
 
 			const {gnosisAddress, usul} = req.body
 
