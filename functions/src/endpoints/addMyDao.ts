@@ -1,6 +1,7 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
+import {validateDao} from "../schemas/Dao"
 
 const addMyDao = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -23,9 +24,8 @@ const addMyDao = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!req.body?.dao) {
-				res.status(400).end("Bad Payload")
-				return
+			if (!validateDao(req.body?.dao)) {
+				res.status(400).end(JSON.stringify(validateDao.errors))
 			}
 
 			const {dao} = req.body

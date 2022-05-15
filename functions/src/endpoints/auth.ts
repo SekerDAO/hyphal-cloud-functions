@@ -2,7 +2,7 @@ import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
 import {verifyMessage} from "@ethersproject/wallet"
-import {isAddress} from "@ethersproject/address"
+import {validateAuth} from "../schemas/User"
 
 const auth = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -12,14 +12,8 @@ const auth = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!(req.body?.account && req.body.token && req.body.signature)) {
-				res.status(400).end("Bad Payload")
-				return
-			}
-
-			if (!isAddress(req.body.account)) {
-				res.status(400).end("Bad Address")
-				return
+			if (!validateAuth(req.body)) {
+				res.status(400).end(JSON.stringify(validateAuth.errors))
 			}
 
 			const recoveredAccount = verifyMessage(

@@ -1,10 +1,10 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
-import {isAddress} from "@ethersproject/address"
 import {Contract} from "@ethersproject/contracts"
 import GnosisSafe from "../abis/GnosisSafeL2.json"
 import provider from "../provider"
+import {validateDao} from "../schemas/Dao"
 
 const editDao = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -27,16 +27,9 @@ const editDao = https.onRequest((req, res) =>
 				return
 			}
 
-			if (!req.body?.gnosisAddress) {
-				res.status(400).end("Bad Payload")
-				return
+			if (!validateDao(req.body)) {
+				res.status(400).end(JSON.stringify(validateDao.errors))
 			}
-			if (!isAddress(req.body.gnosisAddress)) {
-				res.status(400).end("Bad Address")
-				return
-			}
-
-			// TODO: add schema validation
 
 			const {gnosisAddress, name, description, website, twitter, telegram, discord, profileImage, headerImage} =
 				req.body

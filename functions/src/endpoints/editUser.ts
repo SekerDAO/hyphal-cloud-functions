@@ -1,6 +1,7 @@
 import {https, logger} from "firebase-functions"
 import cors from "cors"
 import admin from "firebase-admin"
+import {validateUser} from "../schemas/User"
 
 const editUser = https.onRequest((req, res) =>
 	cors()(req, res, async () => {
@@ -23,10 +24,8 @@ const editUser = https.onRequest((req, res) =>
 				return
 			}
 
-			// TODO: validation
-			if (!req.body) {
-				res.status(400).end("Unexpected empty body")
-				return
+			if (!validateUser(req.body)) {
+				res.status(400).end(JSON.stringify(validateUser.errors))
 			}
 
 			const {name, url, bio, location, email, website, twitter, instagram, profileImage, headerImage} = req.body
